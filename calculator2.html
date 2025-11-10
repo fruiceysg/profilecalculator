@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acai Bowl Customizer</title>
     <link href="https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap" rel="stylesheet">
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         * { box-sizing: border-box; font-family: 'Darumadrop One', Arial, sans-serif; }
         body { margin: 0; padding: 0; background: transparent; }
@@ -30,7 +29,7 @@
         .total-label { font-size: 14px; font-weight: 600; color: #374151; }
         .total-value { font-size: 24px; font-weight: 700; color: #1f2937; }
         .note-box { background: #fef3c7; border: 2px solid #fbbf24; border-radius: 8px; padding: 12px; margin-top: 15px; font-size: 13px; color: #92400e; }
-        .recaptcha-box { display: flex; justify-content: center; margin: 20px 0; }
+        .recaptcha-box { display: flex; justify-content: center; margin: 20px 0; transform: scale(0.9); transform-origin: 0 0; }
         .btn-submit { width: 100%; padding: 16px; background: linear-gradient(to right, #7f87b2, #6796ce, #85b2d1, #99d1b3, #efd876, #dea04e, #dc8580); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Darumadrop One', Arial, sans-serif; margin-top: 20px; }
         .btn-submit:hover { transform: scale(1.02); }
         .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -122,6 +121,7 @@
             <button class="btn-close" onclick="closeModal()">Close</button>
         </div>
     </div>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
         const bowls = { dessert: {price: 4.50, cal: 168}, meal: {price: 5.50, cal: 336} };
         const blends = { classic: {price: 0, cal: 0}, original_yogurt: {price: 1.20, cal: 100}, mix_berries_yogurt: {price: 1.20, cal: 95}, mango_puree: {price: 1.50, cal: 25}, avocado_puree: {price: 2.00, cal: 80} };
