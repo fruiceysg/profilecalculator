@@ -8,28 +8,44 @@
     <style>
         * { box-sizing: border-box; font-family: 'Darumadrop One', Arial, sans-serif; }
         body { margin: 0; padding: 0; background: transparent; }
-        .wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 0; width: 100%; max-width: 100%; margin: 0; }
+        .wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 0; width: 100%; max-width: 100%; margin: 0; min-height: 100vh; }
         @media (max-width: 768px) { 
-            .wrapper { grid-template-columns: 1fr; gap: 10px; }
+            .wrapper { grid-template-columns: 1fr; gap: 10px; min-height: auto; }
+            .container { border-radius: 15px; overflow-y: auto; max-height: 100vh; }
         }
+        .image-container { border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .image-container img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .container { width: 100%; background: white; padding: 25px; display: flex; flex-direction: column; }
-        .title { font-size: 24px; font-weight: 700; color: #1f2937; margin-bottom: 20px; text-align: center; }
+        .container { width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); padding: 20px; display: flex; flex-direction: column; overflow-y: auto; position: relative; }
+        .container::before { 
+            content: ''; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.05)"/><circle cx="150" cy="100" r="60" fill="rgba(255,255,255,0.03)"/><circle cx="300" cy="150" r="50" fill="rgba(255,255,255,0.04)"/><circle cx="80" cy="250" r="70" fill="rgba(255,255,255,0.05)"/><circle cx="320" cy="300" r="45" fill="rgba(255,255,255,0.03)"/></svg>');
+            pointer-events: none;
+        }
+        .content { position: relative; z-index: 1; }
+        .title { font-size: 28px; font-weight: 700; color: white; margin-bottom: 20px; text-align: center; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        .section-title { font-size: 18px; font-weight: 600; color: white; margin-bottom: 15px; margin-top: 15px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
         .form-group { margin-bottom: 12px; }
-        label { display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 13px; font-family: 'Darumadrop One', Arial, sans-serif; }
-        input:focus, select:focus { outline: none; border-color: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
-        .small-text { font-size: 11px; color: #6b7280; margin-top: 4px; }
+        label { display: block; font-size: 13px; font-weight: 600; color: white; margin-bottom: 6px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+        input, select { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 13px; font-family: 'Darumadrop One', Arial, sans-serif; background: rgba(255,255,255,0.95); color: #333; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        input:focus, select:focus { outline: none; box-shadow: 0 0 0 3px rgba(255,255,255,0.3), 0 4px 15px rgba(0,0,0,0.1); background: white; }
+        .small-text { font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
         .calories-display { margin-top: 20px; }
-        .calories-box { background: white; border-radius: 10px; padding: 15px; border: 2px solid #93c5fd; margin-bottom: 12px; }
-        .calories-box.needed { border-color: #fdba74; }
-        .calories-box-title { font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
-        .calories-box-value { font-size: 24px; font-weight: bold; color: #2563eb; }
-        .calories-box.needed .calories-box-value { color: #ea580c; }
-        .calories-box-subtitle { font-size: 11px; color: #6b7280; margin-top: 4px; }
+        .calories-box { background: rgba(255,255,255,0.95); border-radius: 15px; padding: 18px; border: 3px solid #ffd700; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        .calories-box.needed { border-color: #ff6b6b; background: rgba(255,255,255,0.95); }
+        .calories-box-title { font-size: 13px; font-weight: 700; color: #667eea; margin-bottom: 8px; }
+        .calories-box.needed .calories-box-title { color: #ff6b6b; }
+        .calories-box-value { font-size: 28px; font-weight: bold; color: #667eea; }
+        .calories-box.needed .calories-box-value { color: #ff6b6b; }
+        .calories-box-subtitle { font-size: 11px; color: #666; margin-top: 6px; }
         .hidden { display: none; }
+        .fun-emoji { font-size: 24px; margin-right: 8px; }
     </style>
 </head>
 <body>
@@ -39,63 +55,65 @@
         </div>
         
         <div class="container">
-            <div class="title">Your Profile</div>
-            
-            <div class="section-title">Your Information</div>
-            
-            <div class="grid">
+            <div class="content">
+                <div class="title"><span class="fun-emoji">🧮</span>Your Profile</div>
+                
+                <div class="section-title"><span class="fun-emoji">👤</span>Your Information</div>
+                
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="gender" onchange="calc()">
+                            <option value="female">👩 Female</option>
+                            <option value="male">👨 Male</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Age (years)</label>
+                        <input type="number" id="age" placeholder="30" onchange="calc()" oninput="calc()">
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="form-group">
+                        <label>📏 Height (cm)</label>
+                        <input type="number" id="height" placeholder="165" onchange="calc()" oninput="calc()">
+                    </div>
+                    <div class="form-group">
+                        <label>⚖️ Weight (kg)</label>
+                        <input type="number" id="weight" placeholder="65" onchange="calc()" oninput="calc()">
+                    </div>
+                </div>
+
                 <div class="form-group">
-                    <label>Gender</label>
-                    <select id="gender" onchange="calc()">
-                        <option value="female">Female</option>
-                        <option value="male">Male</option>
+                    <label>🏃 Activity Level</label>
+                    <select id="activity" onchange="calc()">
+                        <option value="sedentary">😴 Sedentary (little or no exercise)</option>
+                        <option value="light">🚶 Light (exercise 1-3 days/week)</option>
+                        <option value="moderate">🏋️ Moderate (exercise 3-5 days/week)</option>
+                        <option value="active">💪 Active (exercise 6-7 days/week)</option>
+                        <option value="very_active">🔥 Very Active (intense exercise daily)</option>
                     </select>
                 </div>
+
                 <div class="form-group">
-                    <label>Age (years)</label>
-                    <input type="number" id="age" placeholder="30" onchange="calc()" oninput="calc()">
-                </div>
-            </div>
-
-            <div class="grid">
-                <div class="form-group">
-                    <label>Height (cm)</label>
-                    <input type="number" id="height" placeholder="165" onchange="calc()" oninput="calc()">
-                </div>
-                <div class="form-group">
-                    <label>Weight (kg)</label>
-                    <input type="number" id="weight" placeholder="65" onchange="calc()" oninput="calc()">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Activity Level</label>
-                <select id="activity" onchange="calc()">
-                    <option value="sedentary">Sedentary (little or no exercise)</option>
-                    <option value="light">Light (exercise 1-3 days/week)</option>
-                    <option value="moderate">Moderate (exercise 3-5 days/week)</option>
-                    <option value="active">Active (exercise 6-7 days/week)</option>
-                    <option value="very_active">Very Active (intense exercise daily)</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Current Calories Intake (kcal)</label>
-                <input type="number" id="intake" placeholder="800" onchange="calc()" oninput="calc()">
-                <div class="small-text">Enter calories already consumed today</div>
-            </div>
-
-            <div id="results" class="calories-display hidden">
-                <div class="calories-box">
-                    <div class="calories-box-title">Daily Calorie Needs</div>
-                    <div class="calories-box-value" id="recommended">0 kcal</div>
-                    <div class="calories-box-subtitle">Based on your profile and activity level</div>
+                    <label>🍽️ Current Calories Intake (kcal)</label>
+                    <input type="number" id="intake" placeholder="800" onchange="calc()" oninput="calc()">
+                    <div class="small-text">Enter calories you've already consumed today</div>
                 </div>
 
-                <div id="neededBox" class="calories-box needed hidden">
-                    <div class="calories-box-title">Remaining Calories Today</div>
-                    <div class="calories-box-value" id="needed">0 kcal</div>
-                    <div class="calories-box-subtitle">Calories left to reach your daily goal</div>
+                <div id="results" class="calories-display hidden">
+                    <div class="calories-box">
+                        <div class="calories-box-title">⚡ Daily Calorie Needs</div>
+                        <div class="calories-box-value" id="recommended">0 kcal</div>
+                        <div class="calories-box-subtitle">Based on your profile and activity level</div>
+                    </div>
+
+                    <div id="neededBox" class="calories-box needed hidden">
+                        <div class="calories-box-title">🎯 Remaining Calories Today</div>
+                        <div class="calories-box-value" id="needed">0 kcal</div>
+                        <div class="calories-box-subtitle">Calories left to reach your daily goal</div>
+                    </div>
                 </div>
             </div>
         </div>
